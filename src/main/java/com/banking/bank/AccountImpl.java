@@ -5,11 +5,11 @@ import java.util.List;
 /**
  * Created by graham on 03/11/16.
  */
-public class Account {
+public class AccountImpl implements Account{
 
-    private List<Transaction> transactions;
+    private List<TransactionImpl> transactions;
 
-    public Account() {
+    public AccountImpl() {
 
     }
 }

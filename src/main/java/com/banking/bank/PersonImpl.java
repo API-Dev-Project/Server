@@ -3,7 +3,7 @@ package com.banking.bank;
 /**
  * Created by graham on 03/11/16.
  */
-public class Person {
+public class PersonImpl implements Person{
 
     private String firstname;
     private String surname;
@@ -11,11 +11,11 @@ public class Person {
     private String address;
     private String country;
 
-    public Person(String firstname,
-                  String surname,
-                  String email,
-                  String address,
-                  String country) {
+    public PersonImpl(String firstname,
+                      String surname,
+                      String email,
+                      String address,
+                      String country) {
 
         setFirstname(firstname);
         setSurname(surname);

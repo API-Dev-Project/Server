@@ -3,5 +3,7 @@ package com.banking.bank;
 /**
  * Created by graham on 03/11/16.
  */
-public class Transaction {
+public class TransactionImpl implements Transaction{
+
 }
+
