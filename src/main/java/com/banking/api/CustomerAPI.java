@@ -6,14 +6,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-@Path("/temperature")
+@Path("/customer")
 public class CustomerAPI {
 
 
     @GET
-    @Path("/convert")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response convertTemperature(@Context UriInfo data) {
+    @Path("/new")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createCustomer(@Context UriInfo data) {
         return Response.status(200).entity("\nAccountImpl created\n").build();
     }
 
