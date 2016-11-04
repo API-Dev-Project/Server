@@ -31,7 +31,7 @@ public class Account {
         return sortCode;
     }
 
-    public void lodge(Customer customer, double amount) {
+    public void lodge(Customer customer, Account account, double amount) {
 
     }
 
