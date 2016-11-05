@@ -1,6 +1,6 @@
 package com.banking.bank;
 
-import com.banking.util.Encyptor;
+import com.banking.util.HashUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +20,10 @@ public class Customer extends Person {
                     String address,
                     String country,
                     String username,
-                    String password,
-                    Account account) {
+                    String password) {
         super(firstname, surname, email, address, country);
 
         accounts = new ArrayList<>();
-        accounts.add(account);
         setUsername(username);
         setPassword(password);
     }
@@ -34,15 +32,39 @@ public class Customer extends Person {
         this.username = username;
     }
 
+    public void setPassword(String password) {
+        this.password = HashUtil.sha256(password);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
     public String getUsername() {
         return username;
     }
 
-    public void setPassword(String password) {
-        this.password = Encyptor.sha256(password);
+    public void addAccount(Account account) {
+        accounts.add(account);
     }
 
-    public boolean isCustomerOwner(Account account) {
-        return true;
+    public Account getAccount(long accountNumber, int sortCode) {
+        for (Account tempAccount : accounts) {
+            if (tempAccount.getAccountNumer() == accountNumber && tempAccount.getSortCode() == sortCode) {
+                return tempAccount;
+            }
+        }
+
+        return null;
+    }
+
+    public boolean isOwner(Account account) {
+        for (Account tempAccount : accounts) {
+            if (tempAccount.getOwner().getUsername().equals(this.getUsername())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -11,12 +11,15 @@ public class Account {
     private int sortCode;
     private long accountNumber;
     private double balance;
+    private Customer owner;
 
-    public Account(int sortCode) {
+    public Account(int sortCode, Customer owner) {
         transactions = new ArrayList<>();
         balance = 0.0;
         setSortCode(sortCode);
+        setOwner(owner);
         generateAccountNumber();
+        this.owner.addAccount(this);
     }
 
     public long getAccountNumer() {
@@ -31,12 +34,23 @@ public class Account {
         return sortCode;
     }
 
-    public void lodge(Customer customer, Account account, double amount) {
-
+    public Customer getOwner() {
+        return owner;
     }
 
-    public void withdraw() {
+    public void lodge(Customer customer, long accountNumber, int sortCode , double amount) {
+        Account account = customer.getAccount(accountNumber, sortCode);
 
+        if (account != null && customer.isOwner(account)) {
+            lodge(account, amount);
+        } else {
+            System.out.println("Customer isn't the owner of that account");
+            //Throw customer !owner exception
+        }
+    }
+
+    private void lodge(Account account, double amount) {
+        System.out.println("Amount Successfully Lodged");
     }
 
     private void setSortCode(int sortCode) {
@@ -45,6 +59,10 @@ public class Account {
         } else {
             this.sortCode = sortCode;
         }
+    }
+
+    private void setOwner(Customer owner) {
+        this.owner = owner;
     }
 
     private void generateAccountNumber() {
