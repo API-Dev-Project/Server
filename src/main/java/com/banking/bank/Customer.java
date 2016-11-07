@@ -48,16 +48,6 @@ public class Customer extends Person {
         accounts.add(account);
     }
 
-    public Account getAccount(long accountNumber, int sortCode) {
-        for (Account tempAccount : accounts) {
-            if (tempAccount.getAccountNumer() == accountNumber && tempAccount.getSortCode() == sortCode) {
-                return tempAccount;
-            }
-        }
-
-        return null;
-    }
-
     public boolean isOwner(Account account) {
         for (Account tempAccount : accounts) {
             if (tempAccount.getOwner().getUsername().equals(this.getUsername())) {
@@ -67,4 +57,16 @@ public class Customer extends Person {
 
         return false;
     }
+
+    //Could possibly be removed
+    public Account getAccount(long accountNumber, int sortCode) {
+        for (Account tempAccount : accounts) {
+            if (tempAccount.getAccountNumber() == accountNumber && tempAccount.getSortCode() == sortCode) {
+                return tempAccount;
+            }
+        }
+
+        return null;
+    }
+
 }

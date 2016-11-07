@@ -1,5 +1,9 @@
 package com.banking.bank;
 
+import com.banking.bank.exception.CustomerNotOwnerException;
+import com.banking.bank.exception.InsufficentFundsException;
+import com.banking.bank.exception.InvalidAmountException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -22,7 +26,7 @@ public class Account {
         this.owner.addAccount(this);
     }
 
-    public long getAccountNumer() {
+    public long getAccountNumber() {
         return accountNumber;
     }
 
@@ -38,19 +42,17 @@ public class Account {
         return owner;
     }
 
-    public void lodge(Customer customer, long accountNumber, int sortCode , double amount) {
-        Account account = customer.getAccount(accountNumber, sortCode);
-
-        if (account != null && customer.isOwner(account)) {
-            lodge(account, amount);
+    public void lodge(Customer customer, double amount) throws InvalidAmountException, CustomerNotOwnerException{
+        if (amount > 0 && customer.isOwner(this)) {
+            balance += amount;
+            transactions.add(new Transaction(Transaction.Type.CREDIT, amount, balance));
         } else {
-            System.out.println("Customer isn't the owner of that account");
-            //Throw customer !owner exception
+            if (amount < 0) {
+                throw new InvalidAmountException();
+            } else if (!customer.isOwner(this)) {
+                throw new CustomerNotOwnerException();
+            }
         }
-    }
-
-    private void lodge(Account account, double amount) {
-        System.out.println("Amount Successfully Lodged");
     }
 
     private void setSortCode(int sortCode) {
