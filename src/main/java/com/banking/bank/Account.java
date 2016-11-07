@@ -49,10 +49,35 @@ public class Account {
         } else {
             if (amount < 0) {
                 throw new InvalidAmountException();
+            } else {
+                throw new CustomerNotOwnerException();
+            }
+        }
+    }
+
+    public void withdraw(Customer customer, double amount) throws InvalidAmountException, CustomerNotOwnerException, InsufficentFundsException{
+        if (amount > 0 && customer.isOwner(this)) {
+            if (canWithdraw(amount)) {
+                withdraw(amount);
+            } else {
+                throw new InsufficentFundsException();
+            }
+        } else {
+            if (amount < 0) {
+                throw new InvalidAmountException();
             } else if (!customer.isOwner(this)) {
                 throw new CustomerNotOwnerException();
             }
         }
+    }
+
+    private boolean canWithdraw(double amount) {
+        return !(balance < 0) && !((balance - amount) < 0);
+    }
+
+    private void withdraw(double amount) {
+        balance -= amount;
+        transactions.add(new Transaction(Transaction.Type.DEBIT, amount, balance));
     }
 
     private void setSortCode(int sortCode) {
