@@ -11,6 +11,11 @@ public class Transaction {
     private double amount;
     private double accountBalance;
 
+    public Transaction() {
+        amount = 0;
+        accountBalance = 0;
+    }
+
     public Transaction(Type type, double amount, double accountBalance) {
         this.type = type;
         this.amount = amount;
