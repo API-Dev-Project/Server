@@ -13,6 +13,7 @@ public class Customer extends Person {
     private List<Account> accounts;
     private String username;
     private String password;
+    private int id;
 
     public Customer(String firstname,
                     String surname,
