@@ -1,4 +1,4 @@
-package com.banking.test;
+package bank;
 
 import com.banking.bank.Account;
 import com.banking.bank.Customer;

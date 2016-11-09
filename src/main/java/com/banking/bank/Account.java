@@ -43,41 +43,33 @@ public class Account {
     }
 
     public void lodge(Customer customer, double amount) throws InvalidAmountException, CustomerNotOwnerException{
-        if (amount > 0 && customer.isOwner(this)) {
-            balance += amount;
-            transactions.add(new Transaction(Transaction.Type.CREDIT, amount, balance));
+        if (amount > 0) {
+            Transaction transaction = new Lodgement(customer, this, amount);
+            transactions.add(transaction);
         } else {
-            if (amount < 0) {
-                throw new InvalidAmountException();
-            } else {
-                throw new CustomerNotOwnerException();
-            }
+            throw new InvalidAmountException();
         }
     }
 
     public void withdraw(Customer customer, double amount) throws InvalidAmountException, CustomerNotOwnerException, InsufficentFundsException{
-        if (amount > 0 && customer.isOwner(this)) {
-            if (canWithdraw(amount)) {
-                withdraw(amount);
-            } else {
-                throw new InsufficentFundsException();
-            }
+        if (amount > 0) {
+            Transaction transaction = new Withdrawal(customer, this, amount);
+            transactions.add(transaction);
         } else {
-            if (amount < 0) {
-                throw new InvalidAmountException();
-            } else if (!customer.isOwner(this)) {
-                throw new CustomerNotOwnerException();
-            }
+            throw new InvalidAmountException();
         }
     }
 
-    private boolean canWithdraw(double amount) {
-        return !(balance < 0) && !((balance - amount) < 0);
+    public void transfer() {
+
     }
 
-    private void withdraw(double amount) {
-        balance -= amount;
-        transactions.add(new Transaction(Transaction.Type.DEBIT, amount, balance));
+    protected void updateBalance(double amount) {
+        balance = amount;
+    }
+
+    protected boolean canWithdraw(double amount) {
+        return !(balance < 0) && !((balance - amount) < 0);
     }
 
     private void setSortCode(int sortCode) {

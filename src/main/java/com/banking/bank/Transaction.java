@@ -9,25 +9,25 @@ public class Transaction {
 
     private Type type;
     private double amount;
-    private double accountBalance;
+    private double balanceAfter;
+    private int id;
 
-    public Transaction() {
-        amount = 0;
-        accountBalance = 0;
-    }
-
-    public Transaction(Type type, double amount, double accountBalance) {
+    public Transaction(Type type, double amount) {
         this.type = type;
         this.amount = amount;
-        this. accountBalance = accountBalance;
+        this.id = 0;
     }
 
     public Type getType() {
         return type;
     }
 
-    public double getAccountBalance() {
-        return accountBalance;
+    public double getBalanceAfter() {
+        return balanceAfter;
+    }
+
+    protected void setBalanceAfter(double balanceAfter) {
+        this.balanceAfter = balanceAfter;
     }
 
     public double getAmount() {
