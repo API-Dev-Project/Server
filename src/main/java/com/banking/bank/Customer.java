@@ -2,12 +2,14 @@ package com.banking.bank;
 
 import com.banking.util.HashUtil;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by graham on 03/11/16.
  */
+
 public class Customer extends Person {
 
     private List<Account> accounts;
@@ -15,22 +17,25 @@ public class Customer extends Person {
     private String password;
     private int id;
 
+    public Customer() {
+        username = new String();
+        password = new String();
+        id = 0;
+        accounts = new ArrayList<>();
+    }
+
     public Customer(String firstname,
                     String surname,
                     String email,
                     String address,
-                    String country,
                     String username,
                     String password) {
-        super(firstname, surname, email, address, country);
+        super(firstname, surname, email, address);
 
+        id = 0;
         accounts = new ArrayList<>();
         setUsername(username);
         setPassword(password);
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public void setPassword(String password) {
@@ -39,6 +44,22 @@ public class Customer extends Person {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 
     public String getUsername() {
