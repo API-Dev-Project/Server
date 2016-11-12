@@ -9,19 +9,23 @@ public class Person {
     private String surname;
     private String email;
     private String address;
-    private String country;
+
+    public Person() {
+        firstname = new String();
+        surname = new String();
+        email = new String();
+        address = new String();
+    }
 
     public Person(String firstname,
                   String surname,
                   String email,
-                  String address,
-                  String country) {
+                  String address) {
 
         setFirstname(firstname);
         setSurname(surname);
         setEmail(email);
         setAddress(address);
-        setCountry(country);
     }
 
     public void setFirstname(String firstname) {
@@ -56,11 +60,4 @@ public class Person {
         return address;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getCountry() {
-        return country;
-    }
 }

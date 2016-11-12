@@ -9,7 +9,7 @@ import com.banking.bank.exception.InsufficentFundsException;
 public class Withdrawal extends Transaction {
 
     public Withdrawal(Customer customer, Account account, double amount) throws CustomerNotOwnerException, InsufficentFundsException {
-        super(Type.DEBIT, amount);
+        super(Type.DEBIT, amount, account.getId());
         withdraw(customer, account, amount);
     }
 

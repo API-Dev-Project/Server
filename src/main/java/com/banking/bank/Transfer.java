@@ -11,25 +11,25 @@ public class Transfer extends Transaction {
 
     public Transfer(Customer fromCustomer,
                     Account fromAccount,
-                    Customer toCustomer,
                     Account toAccount,
                     double amount) throws CustomerNotOwnerException,
                                             InsufficentFundsException,
                                             InvalidAmountException {
         super(Type.DEBIT, amount);
-        transfer(fromCustomer, fromAccount, toCustomer, toAccount, amount);
+        transfer(fromCustomer, fromAccount, toAccount, amount);
     }
 
     private void transfer(Customer fromCustomer,
                           Account fromAccount,
-                          Customer toCustomer,
                           Account toAccount,
                           double amount) throws CustomerNotOwnerException,
                                                 InsufficentFundsException,
                                                 InvalidAmountException {
         if (fromCustomer.isOwner(fromAccount)) {
             fromAccount.withdraw(fromCustomer, amount);
-            toAccount.lodge(toCustomer, amount);
+            toAccount.lodge(toAccount.getOwner(), amount);
+        } else {
+            throw new CustomerNotOwnerException();
         }
     }
 }
