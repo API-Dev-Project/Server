@@ -29,7 +29,7 @@ public class LodgementTest extends BaseTest{
     @Test(expected =  CustomerNotOwnerException.class)
     public void testLodgeToInCorrectAccount() throws InvalidAmountException, CustomerNotOwnerException {
         Customer customer = createCustomer();
-        Customer incorrectCustomer = new Customer("John", "Doe", "jd@gmail.com", "44 Some Road", "Ireland", "John.Doe", "123456");
+        Customer incorrectCustomer = new Customer("John", "Doe", "jd@gmail.com", "44 Some Road", "John.Doe", "123456");
         Account account = createAccount(customer);
 
         account.lodge(incorrectCustomer, 50);
