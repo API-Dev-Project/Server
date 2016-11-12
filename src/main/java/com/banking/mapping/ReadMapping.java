@@ -1,4 +1,4 @@
-package com.banking.persistence;
+package com.banking.mapping;
 
 import com.banking.bank.Account;
 import com.banking.bank.Customer;
@@ -13,13 +13,13 @@ import java.util.List;
 /**
  * Created by Graham Murray on 10/11/16.
  */
-public class Read {
+public class ReadMapping {
 
     public Customer getCustomerById(int id) {
         Customer customer  = new Customer();
         try {
-            Database database = new Database();
-            PreparedStatement statement = database.prepareStatement(Statement.GET_CUSTOMER_ID);
+            PersistenceManager database = new PersistenceManager();
+            PreparedStatement statement = database.prepareStatement(StatementMapping.GET_CUSTOMER_ID);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
 
@@ -42,8 +42,8 @@ public class Read {
     private List<Account> getAccounts(int customerId) {
         List<Account> accounts = new ArrayList<>();
         try {
-            Database database = new Database();
-            PreparedStatement statement = database.prepareStatement(Statement.GET_ACCOUNT_BY_CUSTOMER_ID);
+            PersistenceManager database = new PersistenceManager();
+            PreparedStatement statement = database.prepareStatement(StatementMapping.GET_ACCOUNT_BY_CUSTOMER_ID);
             statement.setInt(1, customerId);
             ResultSet rs = statement.executeQuery();
 
@@ -65,8 +65,8 @@ public class Read {
     private List<Transaction> getTransactions(int acccountId) {
         List<Transaction> transactions = new ArrayList<>();
         try {
-            Database database = new Database();
-            PreparedStatement statement = database.prepareStatement(Statement.GET_TRANACTION_BY_ACCOUNT_ID);
+            PersistenceManager database = new PersistenceManager();
+            PreparedStatement statement = database.prepareStatement(StatementMapping.GET_TRANACTION_BY_ACCOUNT_ID);
             statement.setInt(1, acccountId);
             ResultSet rs = statement.executeQuery();
 

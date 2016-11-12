@@ -9,7 +9,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by graham on 05/11/16.
+ * Created by Graham Murray on 05/11/16.
  */
 public class CustomerTest extends BaseTest{
 
@@ -21,7 +21,6 @@ public class CustomerTest extends BaseTest{
         assertEquals("Doe", customer.getSurname());
         assertEquals("jd@gmail.com", customer.getEmail());
         assertEquals("44 Some Road", customer.getAddress());
-        assertEquals("Ireland", customer.getCountry());
         assertEquals("John.Doe", customer.getUsername());
     }
 

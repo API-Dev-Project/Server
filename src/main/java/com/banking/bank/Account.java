@@ -102,16 +102,9 @@ public class Account {
         }
     }
 
-    public void transfer(Customer fromCustomer,
-                         Account fromAccount,
-                         Account toAccount,
-                         double amount) throws InvalidAmountException, CustomerNotOwnerException, InsufficentFundsException{
-        if (amount > 0) {
-            Transaction transaction = new Transfer(fromCustomer, fromAccount, toAccount, amount);
-            transactions.add(transaction);
-        } else {
-            throw new InvalidAmountException();
-        }
+    public void transfer(Account toAccount, double amount) throws InvalidAmountException, CustomerNotOwnerException, InsufficentFundsException{
+        withdraw(owner, amount);
+        toAccount.lodge(toAccount.getOwner(), amount);
     }
 
     protected void updateBalance(double amount) {

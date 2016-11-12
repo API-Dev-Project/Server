@@ -61,7 +61,7 @@ DROP TABLE IF EXISTS `bank-api`.`Transaction` ;
 CREATE TABLE IF NOT EXISTS `bank-api`.`Transaction` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `type` VARCHAR(45) NOT NULL,
-  `date` VARCHAR(45) NOT NULL,
+  `date` TIMESTAMP NOT NULL DEFAULT now(),
   `amount` DOUBLE NOT NULL,
   `balance` DOUBLE NOT NULL,
   `accountId` INT NOT NULL,

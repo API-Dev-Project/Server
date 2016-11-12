@@ -1,4 +1,4 @@
-package com.banking.persistence;
+package com.banking.mapping;
 
 import com.banking.bank.Account;
 import com.banking.bank.Customer;
@@ -11,11 +11,11 @@ import java.sql.Timestamp;
 /**
  * Created by Graham on 10/11/16.
  */
-public class Write {
+public class WriteMapping {
 
     public void addCustomer(Customer customer) {
-        Database database = getDatabase();
-        String query = Statement.ADD_CUSTOMER;
+        PersistenceManager database = getDatabase();
+        String query = StatementMapping.ADD_CUSTOMER;
 
         PreparedStatement statement = database.prepareStatement(query);
         try {
@@ -33,8 +33,8 @@ public class Write {
     }
 
     public void addAccount(Account account) {
-        Database database = getDatabase();
-        String query = Statement.ADD_ACCOUNT;
+        PersistenceManager database = getDatabase();
+        String query = StatementMapping.ADD_ACCOUNT;
 
         PreparedStatement statement = database.prepareStatement(query);
         try {
@@ -50,8 +50,8 @@ public class Write {
     }
 
     public void addTransaction(Transaction transaction) {
-        Database database = getDatabase();
-        String query = Statement.ADD_TRANSACTION;
+        PersistenceManager database = getDatabase();
+        String query = StatementMapping.ADD_TRANSACTION;
 
         PreparedStatement statement = database.prepareStatement(query);
         try {
@@ -67,7 +67,7 @@ public class Write {
         }
     }
 
-    private Database getDatabase() {
-        return new Database();
+    private PersistenceManager getDatabase() {
+        return new PersistenceManager();
     }
 }

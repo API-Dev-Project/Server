@@ -1,11 +1,11 @@
-package com.banking.persistence;
+package com.banking.mapping;
 
 import java.sql.*;
 
 /**
  * Created by Graham Murray on 10/11/16.
  */
-public class Database {
+public class PersistenceManager {
 
     private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
     private static final String DB_CONNECTION = "jdbc:mysql://localhost:3306/bank-api";
@@ -14,7 +14,7 @@ public class Database {
 
     private Connection connection;
 
-    public Database() {
+    public PersistenceManager() {
         createConnection();
     }
 
