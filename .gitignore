@@ -1,4 +1,5 @@
 .idea
 target
 banking-api.iml
+src/main/resources/config.properties
 

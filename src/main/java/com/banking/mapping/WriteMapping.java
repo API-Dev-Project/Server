@@ -2,9 +2,7 @@ package com.banking.mapping;
 
 import com.banking.bank.Account;
 import com.banking.bank.Customer;
-import com.banking.toggle.PersistenceToggle;
 import com.banking.bank.Transaction;
-import com.banking.toggle.Toggle;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -15,17 +13,7 @@ import java.sql.Timestamp;
  */
 public class WriteMapping {
 
-    private Toggle persistenceToggle;
-
-    public WriteMapping() {
-        persistenceToggle = new PersistenceToggle();
-    }
-
     public void addCustomer(Customer customer) {
-        if(persistenceToggle.isToggleOn()) {
-            return;
-        }
-
         PersistenceManager database = getDatabase();
         String query = StatementMapping.ADD_CUSTOMER;
 
@@ -45,10 +33,6 @@ public class WriteMapping {
     }
 
     public void addAccount(Account account) {
-        if(persistenceToggle.isToggleOn()) {
-            return;
-        }
-
         PersistenceManager database = getDatabase();
         String query = StatementMapping.ADD_ACCOUNT;
 
@@ -66,10 +50,6 @@ public class WriteMapping {
     }
 
     public void addTransaction(Transaction transaction) {
-        if(persistenceToggle.isToggleOn()) {
-            return;
-        }
-
         PersistenceManager database = getDatabase();
         String query = StatementMapping.ADD_TRANSACTION;
 
