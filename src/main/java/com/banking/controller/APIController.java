@@ -5,7 +5,7 @@ import com.banking.bank.Customer;
 import com.banking.mapping.MappingManager;
 
 /**
- * Created by graham on 12/11/16.
+ * Created by Graham Murray on 12/11/16.
  */
 public class APIController {
 
@@ -15,11 +15,22 @@ public class APIController {
         mappingManager = new MappingManager();
     }
 
+
     public void createCustomer(Customer customer) {
-        mappingManager.getWriteMapping().addCustomer(customer);
+        //TODO
     }
 
     public void createAccount(Account account) {
-        mappingManager.getWriteMapping().addAccount(account);
+        //TODO
+    }
+
+    /*
+     * @param customerId
+     * @return Customer
+     * @description Returns a Customer object with all associated accounts and transactions
+     */
+    private Customer load(int customerId) {
+        //TODO
+        return null;
     }
 }

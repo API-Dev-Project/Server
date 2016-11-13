@@ -31,7 +31,7 @@ public class ReadMapping {
                 customer.setAddress(rs.getString("address"));
                 customer.setUsername(rs.getString("username"));
                 customer.setPassword(rs.getString("password"));
-                customer.setAccounts(getAccounts(customer.getId()));
+                customer.setAccounts(getAccounts(customer.getId(), customer));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -39,7 +39,7 @@ public class ReadMapping {
         return customer;
     }
 
-    private List<Account> getAccounts(int customerId) {
+    private List<Account> getAccounts(int customerId, Customer owner) {
         List<Account> accounts = new ArrayList<>();
         try {
             PersistenceManager database = new PersistenceManager();
@@ -50,6 +50,7 @@ public class ReadMapping {
             while (rs.next()) {
                 Account account  = new Account();
                 account.setId(rs.getInt("id"));
+                account.setOwner(owner);
                 account.setAccountNumber(rs.getLong("accountNumber"));
                 account.setSortCode(rs.getInt("sortCode"));
                 account.setBalance(rs.getDouble("balance"));
@@ -66,7 +67,7 @@ public class ReadMapping {
         List<Transaction> transactions = new ArrayList<>();
         try {
             PersistenceManager database = new PersistenceManager();
-            PreparedStatement statement = database.prepareStatement(StatementMapping.GET_TRANACTION_BY_ACCOUNT_ID);
+            PreparedStatement statement = database.prepareStatement(StatementMapping.GET_TRANSACTION_BY_ACCOUNT_ID);
             statement.setInt(1, acccountId);
             ResultSet rs = statement.executeQuery();
 
