@@ -1,21 +1,22 @@
 package com.banking.bank;
 
+import com.banking.mapping.MappingManager;
 import com.banking.util.HashUtil;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by graham on 03/11/16.
+ * Created by Graham Murray on 03/11/16.
  */
 
 public class Customer extends Person {
 
+    private int id;
     private List<Account> accounts;
     private String username;
     private String password;
-    private int id;
+    private MappingManager mappingManager;
 
     public Customer() {
         username = new String();
@@ -34,8 +35,11 @@ public class Customer extends Person {
 
         id = 0;
         accounts = new ArrayList<>();
+        mappingManager = new MappingManager();
         setUsername(username);
         setPassword(password);
+
+        mappingManager.getWriteMapping().addCustomer(this);
     }
 
     public void setPassword(String password) {

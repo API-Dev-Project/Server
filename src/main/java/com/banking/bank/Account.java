@@ -3,6 +3,7 @@ package com.banking.bank;
 import com.banking.bank.exception.CustomerNotOwnerException;
 import com.banking.bank.exception.InsufficentFundsException;
 import com.banking.bank.exception.InvalidAmountException;
+import com.banking.mapping.MappingManager;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,14 +12,19 @@ import java.util.Random;
 
 public class Account {
 
-    private List<Transaction> transactions;
-    private Customer owner;
+    private int id;
     private int sortCode;
     private long accountNumber;
     private double balance;
-    private int id;
+    private List<Transaction> transactions;
+    private Customer owner;
+    private MappingManager mappingManager;
 
+    /*
+     * This no args construction is used for the data access layer
+     */
     public Account() {
+        mappingManager = new MappingManager();
         transactions = new ArrayList<>();
         owner = new Customer();
         sortCode = 0;
@@ -27,13 +33,20 @@ public class Account {
         id = 0;
     }
 
+    /*
+     * Constructor used to register a new account
+     */
     public Account(int sortCode, Customer owner) {
+        mappingManager = new MappingManager();
         transactions = new ArrayList<>();
         balance = 0.0;
         setSortCode(sortCode);
         setOwner(owner);
         generateAccountNumber();
         this.owner.addAccount(this);
+
+        // Persist the new account
+        mappingManager.getWriteMapping().addAccount(this);
     }
 
     public long getAccountNumber() {
@@ -44,20 +57,20 @@ public class Account {
         this.accountNumber = accountNumber;
     }
 
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public void setOwner(Customer owner) {
+        this.owner = owner;
     }
 
     public Customer getOwner() {
         return owner;
     }
 
-    private void setOwner(Customer owner) {
-        this.owner = owner;
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
     public void setId(int id) {
@@ -68,14 +81,6 @@ public class Account {
         return id;
     }
 
-    public void setSortCode(int sortCode) {
-        if (sortCode > 9999 || sortCode < 999) {
-            //Throw invalid sort code exception
-        } else {
-            this.sortCode = sortCode;
-        }
-    }
-
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
     }
@@ -84,10 +89,18 @@ public class Account {
         return sortCode;
     }
 
+    public void setSortCode(int sortCode) {
+        if (sortCode > 9999 || sortCode < 999) {
+            //Throw invalid sort code exception
+        } else {
+            this.sortCode = sortCode;
+        }
+    }
+
     public void lodge(Customer customer, double amount) throws InvalidAmountException, CustomerNotOwnerException{
         if (amount > 0) {
             Transaction transaction = new Lodgement(customer, this, amount);
-            transactions.add(transaction);
+            addTransaction(transaction);
         } else {
             throw new InvalidAmountException();
         }
@@ -96,7 +109,7 @@ public class Account {
     public void withdraw(Customer customer, double amount) throws InvalidAmountException, CustomerNotOwnerException, InsufficentFundsException{
         if (amount > 0) {
             Transaction transaction = new Withdrawal(customer, this, amount);
-            transactions.add(transaction);
+            addTransaction(transaction);
         } else {
             throw new InvalidAmountException();
         }
@@ -113,6 +126,11 @@ public class Account {
 
     protected boolean canWithdraw(double amount) {
         return !(balance < 0) && !((balance - amount) < 0);
+    }
+
+    private void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+        mappingManager.getWriteMapping().addTransaction(transaction);
     }
 
     private void generateAccountNumber() {
