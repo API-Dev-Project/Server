@@ -4,6 +4,7 @@ import com.banking.bank.exception.CustomerNotOwnerException;
 import com.banking.bank.exception.InsufficentFundsException;
 import com.banking.bank.exception.InvalidAmountException;
 import com.banking.mapping.MappingManager;
+import com.banking.mapping.ReadMapping;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,14 +15,14 @@ public class Account {
 
     private int id;
     private int sortCode;
-    private long accountNumber;
+    private int accountNumber;
     private double balance;
     private List<Transaction> transactions;
     private Customer owner;
     private MappingManager mappingManager;
 
     /*
-     * This no args construction is used for the data access layer
+     * This no args constructor is used for the data access layer
      */
     public Account() {
         mappingManager = new MappingManager();
@@ -45,15 +46,14 @@ public class Account {
         generateAccountNumber();
         this.owner.addAccount(this);
 
-        // Persist the new account
-        mappingManager.getWriteMapping().addAccount(this);
+        persist();
     }
 
     public long getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(long accountNumber) {
+    public void setAccountNumber(int accountNumber) {
         this.accountNumber = accountNumber;
     }
 
@@ -135,6 +135,23 @@ public class Account {
 
     private void generateAccountNumber() {
         Random rnd = new Random();
+        ReadMapping readMapping = mappingManager.getReadMapping();
+
         accountNumber = 1000000 + rnd.nextInt(9999999);
+
+        // If the account number exists generate a new one
+        if(readMapping != null && readMapping.doesAccountExist(accountNumber)) {
+            generateAccountNumber();
+        }
+    }
+
+    private void persist() {
+        //Testing so do nothing
+        if (mappingManager.getReadMapping() == null) {
+            return;
+        }
+
+        int customerId = mappingManager.getReadMapping().getCustomerByID(owner.getEmail());
+        mappingManager.getWriteMapping().addAccount(this, customerId);
     }
 }

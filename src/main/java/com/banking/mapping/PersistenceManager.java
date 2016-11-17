@@ -38,8 +38,9 @@ public class PersistenceManager {
     public void execute(PreparedStatement statement) throws SQLException {
         if (!config.isTesting()) {
             statement.execute();
-            closeConnection();
         }
+
+        closeConnection();
     }
 
     private void createConnection() {

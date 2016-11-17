@@ -32,7 +32,7 @@ public class WriteMapping {
         }
     }
 
-    public void addAccount(Account account) {
+    public void addAccount(Account account, int customerId) {
         PersistenceManager database = getDatabase();
         String query = StatementMapping.ADD_ACCOUNT;
 
@@ -41,7 +41,7 @@ public class WriteMapping {
             statement.setLong(1, account.getAccountNumber());
             statement.setInt(2, account.getSortCode());
             statement.setDouble(3, account.getBalance());
-            statement.setInt(4, account.getOwner().getId());
+            statement.setInt(4, customerId);
 
             database.execute(statement);
         } catch (SQLException e) {
