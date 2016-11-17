@@ -1,5 +1,7 @@
 package com.banking.mapping;
 
+import com.banking.Configuration;
+
 import java.sql.*;
 
 /**
@@ -7,14 +9,11 @@ import java.sql.*;
  */
 public class PersistenceManager {
 
-    private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-    private static final String DB_CONNECTION = "jdbc:mysql://localhost:3306/bank-api";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "Pa55w0rd!";
-
+    private Configuration config;
     private Connection connection;
 
     public PersistenceManager() {
+        config = new Configuration();
         createConnection();
     }
 
@@ -37,14 +36,17 @@ public class PersistenceManager {
     }
 
     public void execute(PreparedStatement statement) throws SQLException {
-        statement.execute();
+        if (!config.isTesting()) {
+            statement.execute();
+        }
+
         closeConnection();
     }
 
     private void createConnection() {
         try {
-            Class.forName(DB_DRIVER);
-            connection = DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
+            Class.forName(config.getDbDriver());
+            connection = DriverManager.getConnection(config.getDbConnection(), config.getDbUser(), config.getDbPassword());
         } catch( ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }

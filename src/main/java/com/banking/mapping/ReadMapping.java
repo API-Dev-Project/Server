@@ -15,11 +15,11 @@ import java.util.List;
  */
 public class ReadMapping {
 
-    public Customer getCustomerById(int id) {
+    public Customer getCustomerById(int id, boolean includeAccounts) {
         Customer customer  = new Customer();
         try {
             PersistenceManager database = new PersistenceManager();
-            PreparedStatement statement = database.prepareStatement(StatementMapping.GET_CUSTOMER_ID);
+            PreparedStatement statement = database.prepareStatement(StatementMapping.GET_CUSTOMER_BY_ID);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
 
@@ -31,7 +31,10 @@ public class ReadMapping {
                 customer.setAddress(rs.getString("address"));
                 customer.setUsername(rs.getString("username"));
                 customer.setPassword(rs.getString("password"));
-                customer.setAccounts(getAccounts(customer.getId(), customer));
+
+                if (includeAccounts) {
+                    customer.setAccounts(getAccounts(customer.getId(), customer));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -51,7 +54,7 @@ public class ReadMapping {
                 Account account  = new Account();
                 account.setId(rs.getInt("id"));
                 account.setOwner(owner);
-                account.setAccountNumber(rs.getLong("accountNumber"));
+                account.setAccountNumber(rs.getInt("accountNumber"));
                 account.setSortCode(rs.getInt("sortCode"));
                 account.setBalance(rs.getDouble("balance"));
                 account.setTransactions(getTransactions(account.getId()));
@@ -88,5 +91,62 @@ public class ReadMapping {
         }
 
         return transactions;
+    }
+
+    public int getCustomerByID(String email) {
+        int id = 0;
+
+        try {
+            PersistenceManager database = new PersistenceManager();
+            PreparedStatement statement = database.prepareStatement(StatementMapping.GET_CUSTOMER_BY_EMAIL);
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                id = rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return id;
+    }
+
+    public boolean doesCustomerExist(String email) {
+        try {
+            PersistenceManager database = new PersistenceManager();
+            PreparedStatement statement = database.prepareStatement(StatementMapping.GET_CUSTOMER_BY_EMAIL);
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+
+            int rowCount = 0;
+            if (rs.last()) {
+                rowCount = rs.getRow();
+                return rowCount > 0 ? true:false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean doesAccountExist(int accountNumber) {
+        try {
+            PersistenceManager database = new PersistenceManager();
+            PreparedStatement statement = database.prepareStatement(StatementMapping.GET_ACCOUNT_BY_ACCNUM);
+            statement.setInt(1, accountNumber);
+            ResultSet rs = statement.executeQuery();
+
+            int rowCount = 0;
+            if (rs.last()) {
+                rowCount = rs.getRow();
+                return rowCount > 0 ? true:false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

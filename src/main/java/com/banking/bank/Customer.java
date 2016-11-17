@@ -1,6 +1,8 @@
 package com.banking.bank;
 
+import com.banking.bank.exception.CustomerAlreadyExistsException;
 import com.banking.mapping.MappingManager;
+import com.banking.mapping.ReadMapping;
 import com.banking.util.HashUtil;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class Customer extends Person {
                     String email,
                     String address,
                     String username,
-                    String password) {
+                    String password) throws CustomerAlreadyExistsException {
         super(firstname, surname, email, address);
 
         id = 0;
@@ -39,7 +41,7 @@ public class Customer extends Person {
         setUsername(username);
         setPassword(password);
 
-        mappingManager.getWriteMapping().addCustomer(this);
+        persist();
     }
 
     public void setPassword(String password) {
@@ -95,4 +97,16 @@ public class Customer extends Person {
         return null;
     }
 
+    private void persist() throws CustomerAlreadyExistsException {
+        checkCustomerExists();
+        mappingManager.getWriteMapping().addCustomer(this);
+    }
+
+    private void checkCustomerExists() throws CustomerAlreadyExistsException{
+        ReadMapping readMapping = mappingManager.getReadMapping();
+
+        if (readMapping != null && readMapping.doesCustomerExist(getEmail())) {
+            throw new CustomerAlreadyExistsException();
+        }
+    }
 }

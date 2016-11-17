@@ -2,6 +2,7 @@ package bank;
 
 import com.banking.bank.Account;
 import com.banking.bank.Customer;
+import com.banking.bank.exception.CustomerAlreadyExistsException;
 import com.banking.bank.exception.CustomerNotOwnerException;
 import com.banking.bank.exception.InvalidAmountException;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class LodgementTest extends BaseTest{
     }
 
     @Test(expected =  CustomerNotOwnerException.class)
-    public void testLodgeToInCorrectAccount() throws InvalidAmountException, CustomerNotOwnerException {
+    public void testLodgeToInCorrectAccount() throws InvalidAmountException, CustomerNotOwnerException, CustomerAlreadyExistsException {
         Customer customer = createCustomer();
         Customer incorrectCustomer = new Customer("John", "Doe", "jd@gmail.com", "44 Some Road", "John.Doe", "123456");
         Account account = createAccount(customer);
