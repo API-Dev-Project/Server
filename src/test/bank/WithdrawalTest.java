@@ -3,7 +3,7 @@ package bank;
 import com.banking.bank.Account;
 import com.banking.bank.Customer;
 import com.banking.bank.exception.CustomerNotOwnerException;
-import com.banking.bank.exception.InsufficentFundsException;
+import com.banking.bank.exception.InsufficientFundsException;
 import com.banking.bank.exception.InvalidAmountException;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 public class WithdrawalTest extends BaseTest{
 
     @Test
-    public void testWithdraw() throws InvalidAmountException, CustomerNotOwnerException, InsufficentFundsException {
+    public void testWithdraw() throws InvalidAmountException, CustomerNotOwnerException, InsufficientFundsException {
         Customer customer = createCustomer();
         Account account = createAccount(customer);
 
@@ -24,8 +24,8 @@ public class WithdrawalTest extends BaseTest{
         assertEquals(450, account.getBalance(), DELTA);
     }
 
-    @Test(expected = InsufficentFundsException.class)
-    public void testWithdrawWithZeroBalance() throws InvalidAmountException, CustomerNotOwnerException, InsufficentFundsException{
+    @Test(expected = InsufficientFundsException.class)
+    public void testWithdrawWithZeroBalance() throws InvalidAmountException, CustomerNotOwnerException, InsufficientFundsException {
         Customer customer = createCustomer();
         Account account = createAccount(customer);
 
@@ -34,7 +34,7 @@ public class WithdrawalTest extends BaseTest{
     }
 
     @Test(expected = CustomerNotOwnerException.class)
-    public void testWithdrawCustomerNotOwner() throws InvalidAmountException, CustomerNotOwnerException, InsufficentFundsException{
+    public void testWithdrawCustomerNotOwner() throws InvalidAmountException, CustomerNotOwnerException, InsufficientFundsException {
         Customer customer = createCustomer();
         Customer incorrectCustomer = createCustomer();
         Account account = createAccount(customer);

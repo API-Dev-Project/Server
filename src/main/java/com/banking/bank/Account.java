@@ -1,52 +1,63 @@
 package com.banking.bank;
 
 import com.banking.bank.exception.CustomerNotOwnerException;
-import com.banking.bank.exception.InsufficentFundsException;
+import com.banking.bank.exception.InsufficientFundsException;
 import com.banking.bank.exception.InvalidAmountException;
-import com.banking.mapping.MappingManager;
-import com.banking.mapping.ReadMapping;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Account {
+/**
+ * This class represents a Bank Account
+ * It has various operations defined
+ * such as lodge, withdraw and transfer
+ *
+ * @author Graham Murray
+ * @version 1.0
+ */
+@Entity
+@Table
+@XmlRootElement
+public class Account implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private int sortCode;
     private int accountNumber;
     private double balance;
+    @OneToMany(mappedBy = "account")
     private List<Transaction> transactions;
+    @ManyToOne
+    @JoinColumn(name = "ownerId", referencedColumnName = "id")
     private Customer owner;
-    private MappingManager mappingManager;
 
-    /*
-     * This no args constructor is used for the data access layer
+    /**
+     * This is a no args constructor used by the
+     * persistence layer when loading an Account
      */
-    public Account() {
-        mappingManager = new MappingManager();
-        transactions = new ArrayList<>();
-        owner = new Customer();
-        sortCode = 0;
-        accountNumber = 0;
-        balance = 0;
-        id = 0;
-    }
+    public Account() {}
 
-    /*
-     * Constructor used to register a new account
+    /**
+     * Constructor used to create an new bank account
+     * It generates an account number and registers
+     * the new account with an owner to create the
+     * many to one relationship from Account to Customer
+     *
+     * @param sortCode
+     * @param owner
      */
     public Account(int sortCode, Customer owner) {
-        mappingManager = new MappingManager();
         transactions = new ArrayList<>();
         balance = 0.0;
         setSortCode(sortCode);
         setOwner(owner);
         generateAccountNumber();
         this.owner.addAccount(this);
-
-        persist();
     }
 
     public long getAccountNumber() {
@@ -73,6 +84,11 @@ public class Account {
         this.balance = balance;
     }
 
+    public void updateBalance(double amount) {
+        balance = amount;
+    }
+
+
     public void setId(int id) {
         this.id = id;
     }
@@ -89,6 +105,12 @@ public class Account {
         return sortCode;
     }
 
+    /**
+     * Sets the sortCode for an account and checks
+     * that it is between 999 and 9999
+     *
+     * @param sortCode
+     */
     public void setSortCode(int sortCode) {
         if (sortCode > 9999 || sortCode < 999) {
             //Throw invalid sort code exception
@@ -97,6 +119,13 @@ public class Account {
         }
     }
 
+    /**
+     *
+     * @param customer
+     * @param amount
+     * @throws InvalidAmountException
+     * @throws CustomerNotOwnerException
+     */
     public void lodge(Customer customer, double amount) throws InvalidAmountException, CustomerNotOwnerException{
         if (amount > 0) {
             Transaction transaction = new Lodgement(customer, this, amount);
@@ -106,7 +135,15 @@ public class Account {
         }
     }
 
-    public void withdraw(Customer customer, double amount) throws InvalidAmountException, CustomerNotOwnerException, InsufficentFundsException{
+    /**
+     *
+     * @param customer
+     * @param amount
+     * @throws InvalidAmountException
+     * @throws CustomerNotOwnerException
+     * @throws InsufficientFundsException
+     */
+    public void withdraw(Customer customer, double amount) throws InvalidAmountException, CustomerNotOwnerException, InsufficientFundsException {
         if (amount > 0) {
             Transaction transaction = new Withdrawal(customer, this, amount);
             addTransaction(transaction);
@@ -115,43 +152,43 @@ public class Account {
         }
     }
 
-    public void transfer(Account toAccount, double amount) throws InvalidAmountException, CustomerNotOwnerException, InsufficentFundsException{
+    /**
+     *
+     * @param toAccount
+     * @param amount
+     * @throws InvalidAmountException
+     * @throws CustomerNotOwnerException
+     * @throws InsufficientFundsException
+     */
+    public void transfer(Account toAccount, double amount) throws InvalidAmountException, CustomerNotOwnerException, InsufficientFundsException {
         withdraw(owner, amount);
         toAccount.lodge(toAccount.getOwner(), amount);
     }
 
-    protected void updateBalance(double amount) {
-        balance = amount;
-    }
-
+    /**
+     *
+     * @param amount
+     * @return
+     */
     protected boolean canWithdraw(double amount) {
         return !(balance < 0) && !((balance - amount) < 0);
     }
 
+    /**
+     *
+     * @param transaction
+     */
     private void addTransaction(Transaction transaction) {
         transactions.add(transaction);
-        mappingManager.getWriteMapping().addTransaction(transaction);
     }
 
+    /**
+     *
+     */
     private void generateAccountNumber() {
         Random rnd = new Random();
-        ReadMapping readMapping = mappingManager.getReadMapping();
 
         accountNumber = 1000000 + rnd.nextInt(9999999);
-
-        // If the account number exists generate a new one
-        if(readMapping != null && readMapping.doesAccountExist(accountNumber)) {
-            generateAccountNumber();
-        }
     }
 
-    private void persist() {
-        //Testing so do nothing
-        if (mappingManager.getReadMapping() == null) {
-            return;
-        }
-
-        int customerId = mappingManager.getReadMapping().getCustomerByID(owner.getEmail());
-        mappingManager.getWriteMapping().addAccount(this, customerId);
-    }
 }

@@ -18,7 +18,7 @@ public class HashUtil {
                 sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
             }
             return sb.toString();
-        }catch(NoSuchAlgorithmException ex ){
+        }catch(NoSuchAlgorithmException ex){
             System.err.print(ex);
         }
         return null;

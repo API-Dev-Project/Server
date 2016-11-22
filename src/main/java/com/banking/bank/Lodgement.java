@@ -6,7 +6,7 @@ import com.banking.bank.exception.CustomerNotOwnerException;
 public class Lodgement extends Transaction {
 
     public Lodgement(Customer customer, Account account, double amount) throws CustomerNotOwnerException {
-        super(Type.CREDIT, amount, account.getId());
+        super(Type.CREDIT, amount, account);
         lodge(customer, account, amount);
     }
 

@@ -1,9 +1,15 @@
 package com.banking.bank;
 
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Transaction {
+@Entity
+@Table
+@XmlRootElement
+public class Transaction implements Serializable{
 
     enum Type {
         DEBIT("debit"),
@@ -16,23 +22,23 @@ public class Transaction {
         }
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    @ManyToOne
+    @JoinColumn(name = "accountId", referencedColumnName = "id")
+    private Account account;
     private Type type;
     private String timestamp;
     private double amount;
     private double postBalance;
-    private int accountId;
-    private int id;
 
-    public Transaction() {
-        timestamp = new String();
-        amount = 0.0;
-        postBalance = 0.0;
-        accountId = 0;
-    }
+    public Transaction() {}
 
-    public Transaction(Type type, double amount, int accountId) {
+    public Transaction(Type type, double amount, Account account) {
         this.type = type;
         this.amount = amount;
+        this.account = account;
 
         setTimestamp();
     }
@@ -61,12 +67,8 @@ public class Transaction {
         return amount;
     }
 
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
-    }
-
-    public int getAccountId() {
-        return accountId;
+    public Account getAccount() {
+        return account;
     }
 
     public void setId(int id) {
