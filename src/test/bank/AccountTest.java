@@ -3,7 +3,7 @@ package bank;
 import com.banking.bank.Account;
 import com.banking.bank.Customer;
 import com.banking.bank.exception.CustomerNotOwnerException;
-import com.banking.bank.exception.InsufficentFundsException;
+import com.banking.bank.exception.InsufficientFundsException;
 import com.banking.bank.exception.InvalidAmountException;
 import org.junit.Test;
 
@@ -26,7 +26,7 @@ public class AccountTest extends BaseTest{
     }
 
     @Test
-    public void testTransfer() throws InsufficentFundsException, CustomerNotOwnerException, InvalidAmountException {
+    public void testTransfer() throws InsufficientFundsException, CustomerNotOwnerException, InvalidAmountException {
         Account fromAccount = createAccount(createCustomer());
         Account toAccount = createAccount(createCustomer());
 

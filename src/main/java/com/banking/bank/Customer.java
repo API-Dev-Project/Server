@@ -1,32 +1,47 @@
 package com.banking.bank;
 
 import com.banking.bank.exception.CustomerAlreadyExistsException;
-import com.banking.mapping.MappingManager;
-import com.banking.mapping.ReadMapping;
 import com.banking.util.HashUtil;
 
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Graham Murray on 03/11/16.
+ * @author Graham Murray
+ * @version 1.0
  */
 
-public class Customer extends Person {
+@Entity
+@Table
+@Inheritance
+@XmlRootElement
+public class Customer extends Person implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="owner")
     private List<Account> accounts;
     private String username;
     private String password;
-    private MappingManager mappingManager;
 
     public Customer() {
-        username = new String();
-        password = new String();
-        id = 0;
-        accounts = new ArrayList<>();
+
     }
 
+    /**
+     *
+     * @param firstname
+     * @param surname
+     * @param email
+     * @param address
+     * @param username
+     * @param password
+     * @throws CustomerAlreadyExistsException
+     */
     public Customer(String firstname,
                     String surname,
                     String email,
@@ -37,11 +52,8 @@ public class Customer extends Person {
 
         id = 0;
         accounts = new ArrayList<>();
-        mappingManager = new MappingManager();
         setUsername(username);
         setPassword(password);
-
-        persist();
     }
 
     public void setPassword(String password) {
@@ -64,10 +76,6 @@ public class Customer extends Person {
         return id;
     }
 
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -76,9 +84,14 @@ public class Customer extends Person {
         accounts.add(account);
     }
 
+    /**
+     *
+     * @param account
+     * @return
+     */
     public boolean isOwner(Account account) {
         for (Account tempAccount : accounts) {
-            if (tempAccount.getOwner().getUsername().equals(this.getUsername())) {
+            if (tempAccount.getOwner().equals(account.getOwner())) {
                 return true;
             }
         }
@@ -86,7 +99,13 @@ public class Customer extends Person {
         return false;
     }
 
-    //Could possibly be removed
+    /**
+     *
+     * @param accountNumber
+     * @param sortCode
+     * @return Account
+     * @see Account
+     */
     public Account getAccount(long accountNumber, int sortCode) {
         for (Account tempAccount : accounts) {
             if (tempAccount.getAccountNumber() == accountNumber && tempAccount.getSortCode() == sortCode) {
@@ -97,16 +116,4 @@ public class Customer extends Person {
         return null;
     }
 
-    private void persist() throws CustomerAlreadyExistsException {
-        checkCustomerExists();
-        mappingManager.getWriteMapping().addCustomer(this);
-    }
-
-    private void checkCustomerExists() throws CustomerAlreadyExistsException{
-        ReadMapping readMapping = mappingManager.getReadMapping();
-
-        if (readMapping != null && readMapping.doesCustomerExist(getEmail())) {
-            throw new CustomerAlreadyExistsException();
-        }
-    }
 }

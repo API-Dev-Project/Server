@@ -1,9 +1,13 @@
 package com.banking.bank;
 
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
+
 /**
  * Created by graham on 03/11/16.
  */
-public class Person {
+@MappedSuperclass
+public class Person implements Serializable{
 
     private String firstname;
     private String surname;

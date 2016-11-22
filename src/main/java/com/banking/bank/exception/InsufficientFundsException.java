@@ -3,5 +3,5 @@ package com.banking.bank.exception;
 /**
  * Created by graham on 07/11/16.
  */
-public class InsufficentFundsException extends BankingException {
+public class InsufficientFundsException extends BankingException {
 }

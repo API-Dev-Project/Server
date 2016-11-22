@@ -42,11 +42,11 @@ CREATE TABLE IF NOT EXISTS `bank-api`.`Account` (
   `accountNumber` MEDIUMTEXT NOT NULL,
   `sortCode` INT NOT NULL,
   `balance` DOUBLE NOT NULL,
-  `ownerId` INT NOT NULL,
+  `owner` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_owner_idx` (`ownerId` ASC),
-  CONSTRAINT `fk_owner`
-  FOREIGN KEY (`ownerId`)
+  INDEX `fk_owner_idx` (`owner` ASC),
+  CONSTRAINT `owner`
+  FOREIGN KEY (`owner`)
   REFERENCES `bank-api`.`Customer` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
