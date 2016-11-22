@@ -120,19 +120,26 @@ public class Account implements Serializable {
     }
 
     /**
+     * Lodges an amount x to an account and returns
+     * transaction that took place on the account
      *
      * @param customer
      * @param amount
      * @throws InvalidAmountException
      * @throws CustomerNotOwnerException
+     * @return Transaction
      */
-    public void lodge(Customer customer, double amount) throws InvalidAmountException, CustomerNotOwnerException{
+    public Transaction lodge(Customer customer, double amount) throws InvalidAmountException, CustomerNotOwnerException{
+        Transaction transaction;
+
         if (amount > 0) {
-            Transaction transaction = new Lodgement(customer, this, amount);
+            transaction = new Lodgement(customer, this, amount);
             addTransaction(transaction);
         } else {
             throw new InvalidAmountException();
         }
+
+        return transaction;
     }
 
     /**
@@ -187,7 +194,6 @@ public class Account implements Serializable {
      */
     private void generateAccountNumber() {
         Random rnd = new Random();
-
         accountNumber = 1000000 + rnd.nextInt(9999999);
     }
 
