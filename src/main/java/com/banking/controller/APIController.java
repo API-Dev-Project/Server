@@ -2,6 +2,7 @@ package com.banking.controller;
 
 import com.banking.bank.Account;
 import com.banking.bank.Customer;
+import com.banking.bank.Transaction;
 import com.banking.bank.exception.CustomerNotOwnerException;
 import com.banking.bank.exception.InsufficientFundsException;
 import com.banking.bank.exception.InvalidAmountException;
@@ -19,12 +20,19 @@ public class APIController {
 
     public APIController() {
         persistenceManager = new PersistenceManager();
-        authController = new AuthController();
+        authController = new AuthController(persistenceManager);
     }
 
-    public Customer getCustomer(String username, String password) {
-
-        return null;
+    /**
+     * Returns a Customer based on email and password if they exist
+     * otherwise null is return
+     *
+     * @param email
+     * @param password
+     * @return Customer
+     */
+    public Customer getCustomer(String email, String password) {
+        return authController.getAuthenticatedCustomer(email, password);
     }
 
     /**
@@ -53,8 +61,8 @@ public class APIController {
         persistenceManager.start();
         Account accountToUpdate = (Account) persistenceManager.find(account, account.getId());
 
-        account.lodge(accountToUpdate.getOwner(), amount);
-
+        Transaction transaction = account.lodge(accountToUpdate.getOwner(), amount);
+        persistenceManager.persist(transaction);
         persistenceManager.commit();
     }
 
@@ -71,8 +79,8 @@ public class APIController {
                                                                 CustomerNotOwnerException,
                                                                 InvalidAmountException {
         persistenceManager.start();
-        Account accountToUpdate = (Account) persistenceManager.find(account, account.getId());
 
+        Account accountToUpdate = (Account) persistenceManager.find(account, account.getId());
         account.withdraw(accountToUpdate.getOwner(), amount);
 
         persistenceManager.commit();

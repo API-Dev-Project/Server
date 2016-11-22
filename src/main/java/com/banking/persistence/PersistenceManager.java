@@ -3,11 +3,9 @@ package com.banking.persistence;
 import com.banking.bank.Account;
 import com.banking.bank.Customer;
 import com.banking.bank.Transaction;
+import org.glassfish.jersey.internal.inject.Custom;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
@@ -30,6 +28,28 @@ public class PersistenceManager {
         emfactory = Persistence.createEntityManagerFactory("Bank");
         entityManager = emfactory.createEntityManager();
         criteriaBuilder = entityManager.getCriteriaBuilder();
+    }
+
+    /**
+     * Gets a Customer by email and returns it
+     *
+     * @param email
+     * @return Customer
+     */
+    public Customer getCustomerByEmail(String email) throws NoResultException {
+        Customer customer;
+
+        TypedQuery<Customer> query = entityManager.createQuery(
+                "SELECT c FROM Customer c WHERE c.email = ?1", Customer.class);
+
+        try {
+            customer = query.setParameter(1, email).getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            customer = null;
+        }
+
+        return customer;
     }
 
     /**
@@ -79,17 +99,6 @@ public class PersistenceManager {
     public void close() {
         emfactory.close();
         entityManager.close();
-    }
-
-    public Customer criteria(String e) {
-
-        TypedQuery<Customer> q = entityManager.createQuery(
-                "SELECT * " +
-                        "FROM Customer" +
-                        "WHERE \"email\" = ?", Customer.class).setParameter("email", e);
-        List<Customer> results =   q.getResultList();
-
-        return results.get(0);
     }
 
     private boolean isValidObject(Object o) {

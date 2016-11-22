@@ -9,7 +9,6 @@ import javax.ws.rs.core.UriInfo;
 @Path("/customer")
 public class CustomerAPI {
 
-
     @GET
     @Path("/new")
     @Consumes(MediaType.APPLICATION_JSON)
