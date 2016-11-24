@@ -14,7 +14,7 @@ public class CustomerAPI {
     @Path("/new")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createCustomer(@Context UriInfo data) {
-        return Response.status(200).entity("\nAccount created\n").build();
+        return Response.status(200).entity("\nAccount Make\n").build();
     }
 
 }
