@@ -22,34 +22,31 @@ public class PersistenceManager {
 
     private EntityManagerFactory emfactory;
     private EntityManager entityManager;
-    private CriteriaBuilder criteriaBuilder;
 
     public PersistenceManager() {
         emfactory = Persistence.createEntityManagerFactory("Bank");
         entityManager = emfactory.createEntityManager();
-        criteriaBuilder = entityManager.getCriteriaBuilder();
+    }
+
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
     /**
-     * Gets a Customer by email and returns it
+     * Returns a single result object for a typed query
      *
-     * @param email
-     * @return Customer
+     * @param query
+     * @return Object
      */
-    public Customer getCustomerByEmail(String email) throws NoResultException {
-        Customer customer;
+    public Object getSingleResult(TypedQuery<?>  query) {
+        query.setMaxResults(1);
 
-        TypedQuery<Customer> query = entityManager.createQuery(
-                "SELECT c FROM Customer c WHERE c.email = ?1", Customer.class);
-
-        try {
-            customer = query.setParameter(1, email).getSingleResult();
-        } catch (Exception e) {
-            e.printStackTrace();
-            customer = null;
+        List<?> resultList = query.getResultList();
+        if (resultList == null || resultList.isEmpty()) {
+            return null;
         }
 
-        return customer;
+        return query.getSingleResult();
     }
 
     /**

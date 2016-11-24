@@ -1,27 +1,26 @@
 package com.banking.bank;
 
-import com.banking.bank.exception.CustomerNotOwnerException;
-import com.banking.bank.exception.InsufficientFundsException;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 /**
- * Created by graham on 09/11/16.
+ * Created by Graham Murray on 09/11/16.
  */
+@Entity
+@DiscriminatorValue(value = "Debit")
 public class Withdrawal extends Transaction {
 
-    public Withdrawal(Customer customer, Account account, double amount) throws CustomerNotOwnerException, InsufficientFundsException {
-        super(Type.DEBIT, amount, account);
-        withdraw(customer, account, amount);
+    public Withdrawal() {
+        super();
     }
 
-    private void withdraw(Customer customer, Account account, double amount) throws CustomerNotOwnerException, InsufficientFundsException {
-        if (customer.isOwner(account)) {
-            if (account.canWithdraw(amount)) {
-                account.updateBalance(account.getBalance() - amount);
-            } else {
-                throw new InsufficientFundsException();
-            }
-        } else {
-            throw new CustomerNotOwnerException();
-        }
+    public Withdrawal(Account account, double amount) {
+        super(amount, account);
+    }
+
+    @Override
+    protected void doTransaction() {
+        getAccount().updateBalance(getAccount().getBalance() - getAmount());
+        setPostBalance(getAccount().getBalance());
     }
 }

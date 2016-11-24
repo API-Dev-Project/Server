@@ -101,6 +101,10 @@ public class Account implements Serializable {
         this.transactions = transactions;
     }
 
+    public Transaction getLastTransaction(){
+        return transactions.get(transactions.size() - 1);
+    }
+
     public int getSortCode() {
         return sortCode;
     }
@@ -123,37 +127,38 @@ public class Account implements Serializable {
      * Lodges an amount x to an account and returns
      * transaction that took place on the account
      *
-     * @param customer
      * @param amount
      * @throws InvalidAmountException
-     * @throws CustomerNotOwnerException
      * @return Transaction
      */
-    public Transaction lodge(Customer customer, double amount) throws InvalidAmountException, CustomerNotOwnerException{
+    public void lodge(double amount) throws InvalidAmountException {
         Transaction transaction;
 
         if (amount > 0) {
-            transaction = new Lodgement(customer, this, amount);
+            transaction = new Lodgement(this, amount);
             addTransaction(transaction);
         } else {
             throw new InvalidAmountException();
         }
 
-        return transaction;
     }
 
     /**
      *
-     * @param customer
      * @param amount
      * @throws InvalidAmountException
      * @throws CustomerNotOwnerException
      * @throws InsufficientFundsException
      */
-    public void withdraw(Customer customer, double amount) throws InvalidAmountException, CustomerNotOwnerException, InsufficientFundsException {
+    public void withdraw(double amount) throws InvalidAmountException, InsufficientFundsException {
+
         if (amount > 0) {
-            Transaction transaction = new Withdrawal(customer, this, amount);
-            addTransaction(transaction);
+            if (canWithdraw(amount)) {
+                Transaction transaction = new Withdrawal(this, amount);
+                addTransaction(transaction);
+            } else {
+                throw new InsufficientFundsException();
+            }
         } else {
             throw new InvalidAmountException();
         }
@@ -168,8 +173,9 @@ public class Account implements Serializable {
      * @throws InsufficientFundsException
      */
     public void transfer(Account toAccount, double amount) throws InvalidAmountException, CustomerNotOwnerException, InsufficientFundsException {
-        withdraw(owner, amount);
-        toAccount.lodge(toAccount.getOwner(), amount);
+
+        withdraw(amount);
+        toAccount.lodge(amount);
     }
 
     /**

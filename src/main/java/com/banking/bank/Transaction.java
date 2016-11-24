@@ -3,22 +3,28 @@ package com.banking.bank;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Entity
 @Table
+@Entity
+@DiscriminatorColumn(name = "type")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @XmlRootElement
-public class Transaction implements Serializable{
+public abstract class Transaction implements Serializable {
 
-    enum Type {
-        DEBIT("debit"),
-        CREDIT("credit");
+    public enum Type {
+        CREDIT("Credit"),
+        DEBIT("Debit");
 
         private String type;
 
         Type(String type) {
             this.type = type;
+        }
+
+        @Override
+        public String toString(){
+            return type;
         }
     }
 
@@ -28,28 +34,24 @@ public class Transaction implements Serializable{
     @ManyToOne
     @JoinColumn(name = "accountId", referencedColumnName = "id")
     private Account account;
-    private Type type;
-    private String timestamp;
     private double amount;
+    @Column(name = "balance")
     private double postBalance;
+    @Column(name = "date", nullable = false,
+            updatable = false, insertable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date timestamp;
 
     public Transaction() {}
 
-    public Transaction(Type type, double amount, Account account) {
-        this.type = type;
+    public Transaction(double amount, Account account) {
         this.amount = amount;
         this.account = account;
 
-        setTimestamp();
+        doTransaction();
     }
 
-    public void setType(String type) {
-        this.type = Type.valueOf(type);
-    }
-
-    public Type getType() {
-        return type;
-    }
+    protected abstract void doTransaction();
 
     public void setPostBalance(double postBalance) {
         this.postBalance = postBalance;
@@ -79,17 +81,7 @@ public class Transaction implements Serializable{
         return id;
     }
 
-    public void setTimestamp() {
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        this.timestamp = sdf.format(date);
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 }
