@@ -1,21 +1,22 @@
 package com.banking.bank;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
-import com.banking.bank.exception.CustomerNotOwnerException;
-
+@Entity
+@DiscriminatorValue(value = "Credit")
 public class Lodgement extends Transaction {
-
-    public Lodgement(Customer customer, Account account, double amount) throws CustomerNotOwnerException {
-        super(Type.CREDIT, amount, account);
-        lodge(customer, account, amount);
+    public Lodgement() {
+        super();
     }
 
-    private void lodge(Customer customer, Account account, double amount) throws CustomerNotOwnerException {
-        if (customer.isOwner(account)) {
-            account.updateBalance(account.getBalance() + amount);
-            setPostBalance(account.getBalance());
-        } else {
-            throw new CustomerNotOwnerException();
-        }
+    public Lodgement(Account account, double amount) {
+        super(amount, account);
+    }
+
+    @Override
+    protected void doTransaction() {
+        getAccount().updateBalance(getAccount().getBalance() + getAmount());
+        setPostBalance(getAccount().getBalance());
     }
 }
