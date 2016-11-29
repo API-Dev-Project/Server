@@ -2,6 +2,7 @@ package com.banking.controller;
 
 import com.banking.bank.Customer;
 import com.banking.persistence.PersistenceManager;
+import com.banking.persistence.Query;
 import com.banking.util.HashUtil;
 
 import javax.persistence.TypedQuery;
@@ -31,7 +32,7 @@ public class AuthController {
      */
     public Customer getAuthenticatedCustomer(String email, String password) {
 
-        TypedQuery customerQuery = createCustomerQuery(email);
+        TypedQuery customerQuery = Query.getCustomer(persistenceManager, email);
         customer = (Customer) persistenceManager.getSingleResult(customerQuery);
 
         if (customer != null && isPasswordCorrect(password)) {
@@ -55,13 +56,5 @@ public class AuthController {
         String encryptedPassword = HashUtil.sha256(password);
 
         return encryptedPassword.equals(customer.getPassword());
-    }
-
-    private TypedQuery createCustomerQuery(String email) {
-        TypedQuery<Customer> query = persistenceManager.getEntityManager().createQuery(
-                "SELECT c FROM Customer c WHERE c.email = ?1", Customer.class);
-        query.setParameter(1, email);
-
-        return  query;
     }
 }
