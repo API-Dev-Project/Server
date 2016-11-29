@@ -13,12 +13,11 @@ import com.banking.controller.InteractionController;
 public class JPA {
     public static void main(String args[]) throws CustomerAlreadyExistsException, CustomerNotOwnerException, InvalidAmountException, InsufficientFundsException {
         InteractionController controller = new InteractionController();
-        Customer customer = controller.getCustomer("jd@gmail.com ", "123456");
 
-        if (customer != null) {
-            Account account = customer.getAccount(7732621, 1234);
-            controller.withdraw(account, 20000);
-        }
+        Customer customer = new Customer("John", "Doe", "jd@gmail.com", "44 Some Road", "John.Doe", "123456");
+        customer.addAccount(new Account(customer));
+
+        controller.addNewCustomer(customer);
 
         //controller.teardown();
     }

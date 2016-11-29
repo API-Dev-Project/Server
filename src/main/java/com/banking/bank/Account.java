@@ -48,19 +48,19 @@ public class Account implements Serializable {
      * the new account with an owner to create the
      * many to one relationship from Account to Customer
      *
-     * @param sortCode
      * @param owner
      */
-    public Account(int sortCode, Customer owner) {
+    public Account(Customer owner) {
         transactions = new ArrayList<>();
         balance = 0.0;
         setSortCode(sortCode);
         setOwner(owner);
         generateAccountNumber();
+        generateSortCode();
         this.owner.addAccount(this);
     }
 
-    public long getAccountNumber() {
+    public int getAccountNumber() {
         return accountNumber;
     }
 
@@ -116,11 +116,8 @@ public class Account implements Serializable {
      * @param sortCode
      */
     public void setSortCode(int sortCode) {
-        if (sortCode > 9999 || sortCode < 999) {
-            //Throw invalid sort code exception
-        } else {
-            this.sortCode = sortCode;
-        }
+        this.sortCode = sortCode;
+
     }
 
     /**
@@ -200,6 +197,11 @@ public class Account implements Serializable {
     private void generateAccountNumber() {
         Random rnd = new Random();
         accountNumber = 1000000 + rnd.nextInt(9999999);
+    }
+
+    private void generateSortCode() {
+        Random rnd = new Random();
+        sortCode = 1000 + rnd.nextInt(9999);
     }
 
 }
