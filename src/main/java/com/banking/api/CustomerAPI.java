@@ -32,9 +32,9 @@ public class CustomerAPI {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Customer createCustomer(Account customer) {
-        if(customer == null) {
-            return new Customer();
+    public Customer createCustomer(Customer customer) {
+        if(customer != null) {
+            return interactionController.addNewCustomer(customer);
         }
 
         return null;

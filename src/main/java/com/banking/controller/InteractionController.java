@@ -11,7 +11,6 @@ import com.banking.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Exchanger;
 
 /**
  * Middleware layer that controls persistence and banking operations
@@ -70,7 +69,23 @@ public class InteractionController {
         persistenceManager.persist(customer);
         persistenceManager.commit();
 
-        return getCustomer(customer.getEmail(), customer.getPassword());
+        return customer;
+    }
+
+    public Account addAccount(int customerId) {
+        persistenceManager.start();
+
+        Customer customer = (Customer) persistenceManager.find(Customer.class, customerId);
+
+        if (customer != null) {
+            Account account = generateAccount(customer);
+            persistenceManager.persist(account);
+            persistenceManager.commit();
+
+            return account;
+        }
+
+        return null;
     }
 
     /**
@@ -118,5 +133,23 @@ public class InteractionController {
      */
     public void teardown() {
         persistenceManager.close();
+    }
+
+    private Account generateAccount(Customer customer) {
+        Account account = new Account(customer);
+        boolean exists = doesAccountExist(account.getAccountNumber());
+
+        if (exists) {
+            return new Account(customer);
+        }
+
+        return account;
+    }
+
+    private boolean doesAccountExist(int accountNumber) {
+        TypedQuery customerQuery = Query.getAccount(persistenceManager, accountNumber);
+        Account account = (Account) persistenceManager.getSingleResult(customerQuery);
+
+        return account != null;
     }
 }

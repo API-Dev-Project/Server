@@ -54,16 +54,11 @@ public class PersistenceManager {
      * Customer or Transaction by id. Returns null
      * if an object isn't a valid type
      *
-     * @param objectToFind
      * @param id
      * @return Object
      */
-    public Object find(Object objectToFind, int id) {
-        if (isValidObject(objectToFind)) {
-            return entityManager.find(objectToFind.getClass(), id);
-        }
-
-        return null;
+    public Object find(Class clazz, int id) {
+        return entityManager.find(clazz, id);
     }
 
     /**

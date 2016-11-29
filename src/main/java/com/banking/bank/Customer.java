@@ -1,7 +1,9 @@
 package com.banking.bank;
 
 import com.banking.bank.exception.CustomerAlreadyExistsException;
+import com.banking.deserialzer.CustomerDeserializer;
 import com.banking.util.HashUtil;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -18,6 +20,7 @@ import java.util.List;
 @Table
 @Inheritance
 @XmlRootElement
+@JsonDeserialize(using = CustomerDeserializer.class)
 public class Customer extends Person implements Serializable {
 
     @Id
@@ -33,9 +36,6 @@ public class Customer extends Person implements Serializable {
     }
 
     /**
-     * curl -vi -H "Accept: application/xml" -X POST -D '{address":"44","email":"bd@gmail.com","firstname":"Bart","surname":"Doe", password":"123456","username":"Bart.Doe"}' "http://localhost:8080/api/bank/customer"
-     */
-    /**
      *
      * @param firstname
      * @param surname
@@ -50,7 +50,7 @@ public class Customer extends Person implements Serializable {
                     String email,
                     String address,
                     String username,
-                    String password) throws CustomerAlreadyExistsException {
+                    String password) {
         super(firstname, surname, email, address);
 
         id = 0;
