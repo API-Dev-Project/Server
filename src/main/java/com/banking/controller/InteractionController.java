@@ -6,6 +6,12 @@ import com.banking.bank.exception.CustomerNotOwnerException;
 import com.banking.bank.exception.InsufficientFundsException;
 import com.banking.bank.exception.InvalidAmountException;
 import com.banking.persistence.PersistenceManager;
+import com.banking.persistence.Query;
+
+import javax.persistence.TypedQuery;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Exchanger;
 
 /**
  * Middleware layer that controls persistence and banking operations
@@ -16,10 +22,12 @@ public class InteractionController {
 
     private PersistenceManager persistenceManager;
     private AuthController authController;
+    private Map exceptions;
 
     public InteractionController() {
         persistenceManager = new PersistenceManager();
         authController = new AuthController(persistenceManager);
+        exceptions = new HashMap();
     }
 
     /**
@@ -45,6 +53,8 @@ public class InteractionController {
             }
         }
 
+        addException(InvalidAmountException.class);
+
         return null;
     }
 
@@ -52,13 +62,15 @@ public class InteractionController {
      * Adds a new customer who doesn't exist along with
      * persisting the new account
      *
-     * @param account
-     * @see Account
+     * @param customer
+     * @see Customer
      */
-    public void addNewCustomerWithAccount(Account account) {
-        persistenceManager.persist(account.getOwner());
-        persistenceManager.persist(account);
+    public Customer addNewCustomer(Customer customer) {
+        persistenceManager.start();
+        persistenceManager.persist(customer);
         persistenceManager.commit();
+
+        return getCustomer(customer.getEmail(), customer.getPassword());
     }
 
     /**
@@ -71,6 +83,7 @@ public class InteractionController {
      */
     public void lodge(Account account, double amount) throws CustomerNotOwnerException, InvalidAmountException {
 
+        persistenceManager.start();
         account.lodge(amount);
         persistenceManager.persist(account.getLastTransaction());
         persistenceManager.commit();
@@ -89,9 +102,14 @@ public class InteractionController {
             CustomerNotOwnerException,
             InvalidAmountException {
 
+        persistenceManager.start();
         account.withdraw(amount);
         persistenceManager.persist(account.getLastTransaction());
         persistenceManager.commit();
+    }
+
+    public void addException(Object value) {
+        exceptions.put("Error", value);
     }
 
     /**

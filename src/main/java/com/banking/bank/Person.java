@@ -4,15 +4,15 @@ import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 /**
- * Created by graham on 03/11/16.
+ * Created by Graham Murray on 03/11/16.
  */
 @MappedSuperclass
-public class Person implements Serializable{
+public class Person implements Serializable {
 
-    private String firstname;
-    private String surname;
-    private String email;
-    private String address;
+    protected String firstname;
+    protected String surname;
+    protected String email;
+    protected String address;
 
     public Person() {
         firstname = new String();

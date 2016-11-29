@@ -22,16 +22,19 @@ public class Customer extends Person implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    protected int id;
     @OneToMany(cascade = CascadeType.ALL, mappedBy="owner")
-    private List<Account> accounts;
-    private String username;
-    private String password;
+    protected List<Account> accounts;
+    protected String username;
+    protected String password;
 
     public Customer() {
 
     }
 
+    /**
+     * curl -vi -H "Accept: application/xml" -X POST -D '{address":"44","email":"bd@gmail.com","firstname":"Bart","surname":"Doe", password":"123456","username":"Bart.Doe"}' "http://localhost:8080/api/bank/customer"
+     */
     /**
      *
      * @param firstname

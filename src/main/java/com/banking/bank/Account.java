@@ -173,7 +173,6 @@ public class Account implements Serializable {
      * @throws InsufficientFundsException
      */
     public void transfer(Account toAccount, double amount) throws InvalidAmountException, CustomerNotOwnerException, InsufficientFundsException {
-
         withdraw(amount);
         toAccount.lodge(amount);
     }

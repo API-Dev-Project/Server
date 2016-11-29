@@ -1,0 +1,19 @@
+package com.banking.persistence;
+
+import com.banking.bank.Customer;
+
+import javax.persistence.TypedQuery;
+
+/**
+ * Created by graham on 24/11/16.
+ */
+public class Query {
+
+    public static TypedQuery getCustomer(PersistenceManager persistenceManager, String email) {
+        TypedQuery< Customer > query = persistenceManager.getEntityManager().createQuery(
+                                        "SELECT c FROM Customer c WHERE c.email = ?1", Customer.class);
+        query.setParameter(1, email);
+
+        return  query;
+    }
+}
