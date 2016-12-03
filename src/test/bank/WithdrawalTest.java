@@ -15,31 +15,21 @@ import static org.junit.Assert.assertEquals;
 public class WithdrawalTest extends BaseTest{
 
     @Test
-    public void testWithdraw() throws InvalidAmountException, CustomerNotOwnerException, InsufficientFundsException {
+    public void testWithdraw() throws InvalidAmountException, InsufficientFundsException {
         Customer customer = createCustomer();
         Account account = createAccount(customer);
 
-        account.lodge(customer, 500);
-        account.withdraw(customer, 50);
+        account.lodge(500);
+        account.withdraw(50);
         assertEquals(450, account.getBalance(), DELTA);
     }
 
     @Test(expected = InsufficientFundsException.class)
-    public void testWithdrawWithZeroBalance() throws InvalidAmountException, CustomerNotOwnerException, InsufficientFundsException {
+    public void testWithdrawWithZeroBalance() throws InvalidAmountException, InsufficientFundsException {
         Customer customer = createCustomer();
         Account account = createAccount(customer);
 
-        account.withdraw(customer, 50);
-        assertEquals(0, account.getBalance(), DELTA);
-    }
-
-    @Test(expected = CustomerNotOwnerException.class)
-    public void testWithdrawCustomerNotOwner() throws InvalidAmountException, CustomerNotOwnerException, InsufficientFundsException {
-        Customer customer = createCustomer();
-        Customer incorrectCustomer = createCustomer();
-        Account account = createAccount(customer);
-
-        account.withdraw(incorrectCustomer, 50);
+        account.withdraw(50);
         assertEquals(0, account.getBalance(), DELTA);
     }
 }

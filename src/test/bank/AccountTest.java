@@ -21,7 +21,6 @@ public class AccountTest extends BaseTest{
         Customer customer = createCustomer();
         Account account = createAccount(customer);
 
-        assertEquals(1234, account.getSortCode());
         assertTrue(customer.isOwner(account));
     }
 
@@ -30,7 +29,7 @@ public class AccountTest extends BaseTest{
         Account fromAccount = createAccount(createCustomer());
         Account toAccount = createAccount(createCustomer());
 
-        fromAccount.lodge(fromAccount.getOwner(), 500);
+        fromAccount.lodge(500);
         fromAccount.transfer(toAccount, 50);
 
         assertEquals(450.00, fromAccount.getBalance(), DELTA);
