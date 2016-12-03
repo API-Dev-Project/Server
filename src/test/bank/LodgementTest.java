@@ -15,34 +15,24 @@ import static org.junit.Assert.assertEquals;
 public class LodgementTest extends BaseTest{
 
     @Test
-    public void testLodgeToCorrectAccount() throws InvalidAmountException, CustomerNotOwnerException {
+    public void testLodgeToCorrectAccount() throws InvalidAmountException {
         Customer customer = createCustomer();
         Account accountOne = createAccount(customer);
 
-        accountOne.lodge(customer, 50);
-        accountOne.lodge(customer, 50);
-        accountOne.lodge(customer, 50);
-        accountOne.lodge(customer, 50);
+        accountOne.lodge(50);
+        accountOne.lodge(50);
+        accountOne.lodge(50);
+        accountOne.lodge(50);
 
         assertEquals(200.00, accountOne.getBalance(), DELTA);
     }
 
-    @Test(expected =  CustomerNotOwnerException.class)
-    public void testLodgeToInCorrectAccount() throws InvalidAmountException, CustomerNotOwnerException, CustomerAlreadyExistsException {
-        Customer customer = createCustomer();
-        Customer incorrectCustomer = new Customer("John", "Doe", "jd@gmail.com", "44 Some Road", "John.Doe", "123456");
-        Account account = createAccount(customer);
-
-        account.lodge(incorrectCustomer, 50);
-        assertEquals(0, account.getBalance(), DELTA);
-    }
-
     @Test(expected =  InvalidAmountException.class)
-    public void testLodgeInvalidAmount() throws InvalidAmountException, CustomerNotOwnerException {
+    public void testLodgeInvalidAmount() throws InvalidAmountException {
         Customer customer = createCustomer();
         Account accountOne = createAccount(customer);
 
-        accountOne.lodge(customer, -10);
+        accountOne.lodge(-10);
         assertEquals(0, accountOne.getBalance(), DELTA);
     }
 }
