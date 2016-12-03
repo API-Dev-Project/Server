@@ -1,6 +1,6 @@
 .idea
 target
-banking-api.iml
-Bank.iml
+*.iml
 src/main/resources/config.properties
+src/main/resources/META-INF/persistence.xml
 
