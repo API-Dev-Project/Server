@@ -14,10 +14,10 @@ public class JPA {
     public static void main(String args[]) throws CustomerAlreadyExistsException, CustomerNotOwnerException, InvalidAmountException, InsufficientFundsException {
         InteractionController controller = new InteractionController();
 
-        Customer customer = new Customer("John", "Doe", "jd@gmail.com", "44 Some Road", "John.Doe", "123456");
-        customer.addAccount(new Account(customer));
+        Customer customer = controller.getCustomerById(1);
+        Account account = customer.getAccount(7935974, 3964);
 
-        controller.addNewCustomer(customer);
+        controller.lodge(account, 500);
 
         //controller.teardown();
     }

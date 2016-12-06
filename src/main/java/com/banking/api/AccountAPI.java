@@ -2,6 +2,7 @@ package com.banking.api;
 
 import com.banking.bank.Account;
 import com.banking.bank.Customer;
+import com.banking.bank.Transaction;
 import com.banking.controller.InteractionController;
 
 import javax.ws.rs.*;
@@ -29,19 +30,40 @@ public class AccountAPI {
     public Account getAccount(@PathParam("id") int id, @Context UriInfo info) {
         String accountNumber = info.getQueryParameters().getFirst("accountNumber");
 
+        if (accountNumber != null) {
+            Account account = interactionController.getAccount(Integer.parseInt(accountNumber));
 
-        Account account = interactionController.getAccount(Integer.parseInt(accountNumber));
-
-        if(account == null) {
-            return null;
+            if(account != null) {
+                return account;
+            }
         }
 
-        return account;
+        return null;
     }
 
     @POST
     @Path("/{id}")
     public Account createAccount(@PathParam("id") int id) {
         return interactionController.addAccount(id);
+    }
+
+    @GET
+    @Path("transactions")
+    public List<Transaction> getTransactions(@Context UriInfo data) {
+        int customerId = Integer.valueOf(data.getQueryParameters().getFirst("customerId"));
+        int accountNumber = Integer.valueOf(data.getQueryParameters().getFirst("accountNumber"));
+        int sortCode = Integer.valueOf(data.getQueryParameters().getFirst("sortCode"));
+
+        Customer customer = interactionController.getCustomerById(customerId);
+
+        if (customer != null) {
+            Account account =  customer.getAccount(accountNumber, sortCode);
+
+            if (account != null) {
+                return  account.getTransactions();
+            }
+        }
+
+        return null;
     }
 }

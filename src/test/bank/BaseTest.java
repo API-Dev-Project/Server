@@ -2,7 +2,6 @@ package bank;
 
 import com.banking.bank.Account;
 import com.banking.bank.Customer;
-import com.banking.bank.exception.CustomerAlreadyExistsException;
 
 /**
  * Created by Graham Murray on 07/11/16.

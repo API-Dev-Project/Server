@@ -20,11 +20,8 @@ public class CustomerAPI {
 
     @GET
     @Path("/{id}")
-    public Customer getCustomer(@PathParam("id") int id, @Context UriInfo info) {
-        String email = info.getQueryParameters().getFirst("email");
-        String password = info.getQueryParameters().getFirst("password");
-
-        Customer customer = interactionController.getCustomer(email, password);
+    public Customer getCustomer(@PathParam("id") int id) {
+        Customer customer = interactionController.getCustomerById(id);
 
         if(customer == null) {
             return null;
@@ -54,6 +51,5 @@ public class CustomerAPI {
 
         return null;
     }
-
 
 }

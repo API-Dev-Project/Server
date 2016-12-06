@@ -29,6 +29,7 @@ public class Customer extends Person implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy="owner")
     protected List<Account> accounts;
     protected String username;
+    @Transient
     protected String password;
 
     public Customer() {
