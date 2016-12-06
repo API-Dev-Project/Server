@@ -43,7 +43,7 @@ public class InteractionController {
 
     public Account getAccount(int accountNumber) {
         TypedQuery accountQuery = Query.getAccount(persistenceManager, accountNumber);
-        account = (Account) persistenceManager.getSingleResult(accountQuery);
+        Account account = (Account) persistenceManager.getSingleResult(accountQuery);
 
         return account;
     }
