@@ -41,6 +41,14 @@ public class InteractionController {
         return authController.getAuthenticatedCustomer(email, password);
     }
 
+    public Account getAccount(int accountNumber) {
+        TypedQuery accountQuery = Query.getAccount(persistenceManager, accountNumber);
+        account = (Account) persistenceManager.getSingleResult(accountQuery);
+
+        return account;
+    }
+
+
     public Customer getCustomerById(int id, String email, String password) {
         Customer customer = (Customer) persistenceManager.find(Customer.class, id);
 
@@ -79,6 +87,7 @@ public class InteractionController {
 
         if (customer != null) {
             Account account = generateAccount(customer);
+
             persistenceManager.persist(account);
             persistenceManager.commit();
 
@@ -151,5 +160,23 @@ public class InteractionController {
         Account account = (Account) persistenceManager.getSingleResult(customerQuery);
 
         return account != null;
+    }
+
+    /**
+     * Updates a customer and persists it
+     *
+     * @see Customer
+     */
+    public Customer updateCustomer(Customer customer) {
+        persistenceManager.start();
+        Customer customerToUpdate = (Customer) persistenceManager.find(Customer.class, customer.getId());
+        customerToUpdate.setFirstname(customer.getFirstname());
+        customerToUpdate.setSurname(customer.getSurname());
+        customerToUpdate.setAddress(customer.getAddress());
+        persistenceManager.persist(customerToUpdate);
+        persistenceManager.commit();
+
+        return customerToUpdate;
+
     }
 }

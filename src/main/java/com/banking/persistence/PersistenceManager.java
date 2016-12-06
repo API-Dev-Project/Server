@@ -84,6 +84,11 @@ public class PersistenceManager {
     }
 
     /**
+     * Updates an object
+     */
+    public void merge(Object o) { entityManager.merge(o); }
+
+    /**
      * Closes the entity manager factory along with the
      * entity manager. Is used after a PersistenceManager
      * instance is no longer required.
