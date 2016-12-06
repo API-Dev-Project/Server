@@ -49,20 +49,14 @@ public class InteractionController {
     }
 
 
-    public Customer getCustomerById(int id, String email, String password) {
+    public Customer getCustomerById(int id) {
         Customer customer = (Customer) persistenceManager.find(Customer.class, id);
 
-        if (customer != null) {
-            boolean isValidCustomer = authController.isCredentialsValid(customer, email, password);
-
-            if (isValidCustomer) {
-                return customer;
-            }
+        if (customer == null) {
+            return null;
         }
 
-        addException(InvalidAmountException.class);
-
-        return null;
+        return customer;
     }
 
     /**
@@ -87,8 +81,6 @@ public class InteractionController {
 
         if (customer != null) {
             Account account = generateAccount(customer);
-
-            persistenceManager.persist(account);
             persistenceManager.commit();
 
             return account;
@@ -145,21 +137,7 @@ public class InteractionController {
     }
 
     private Account generateAccount(Customer customer) {
-        Account account = new Account(customer);
-        boolean exists = doesAccountExist(account.getAccountNumber());
-
-        if (exists) {
-            return new Account(customer);
-        }
-
-        return account;
-    }
-
-    private boolean doesAccountExist(int accountNumber) {
-        TypedQuery customerQuery = Query.getAccount(persistenceManager, accountNumber);
-        Account account = (Account) persistenceManager.getSingleResult(customerQuery);
-
-        return account != null;
+        return new Account(customer);
     }
 
     /**

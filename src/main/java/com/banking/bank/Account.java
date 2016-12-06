@@ -105,6 +105,10 @@ public class Account implements Serializable {
         return transactions.get(transactions.size() - 1);
     }
 
+    public List getTransactions(){
+        return transactions;
+    }
+
     public int getSortCode() {
         return sortCode;
     }
