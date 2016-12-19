@@ -2,6 +2,7 @@ package com.banking.controller;
 
 import com.banking.bank.Account;
 import com.banking.bank.Customer;
+import com.banking.bank.Transaction;
 import com.banking.bank.exception.CustomerNotOwnerException;
 import com.banking.bank.exception.InsufficientFundsException;
 import com.banking.bank.exception.InvalidAmountException;
@@ -47,7 +48,6 @@ public class InteractionController {
 
         return account;
     }
-
 
     public Customer getCustomerById(int id) {
         Customer customer = (Customer) persistenceManager.find(Customer.class, id);
@@ -97,12 +97,14 @@ public class InteractionController {
      * @throws CustomerNotOwnerException
      * @throws InvalidAmountException
      */
-    public void lodge(Account account, double amount) throws CustomerNotOwnerException, InvalidAmountException {
+    public Transaction lodge(Account account, double amount) throws CustomerNotOwnerException, InvalidAmountException {
 
         persistenceManager.start();
         account.lodge(amount);
         persistenceManager.persist(account.getLastTransaction());
         persistenceManager.commit();
+
+        return account.getLastTransaction();
     }
 
     /**
@@ -114,7 +116,7 @@ public class InteractionController {
      * @throws CustomerNotOwnerException
      * @throws InvalidAmountException
      */
-    public void withdraw(Account account, double amount) throws InsufficientFundsException,
+    public Transaction withdraw(Account account, double amount) throws InsufficientFundsException,
             CustomerNotOwnerException,
             InvalidAmountException {
 
@@ -122,6 +124,22 @@ public class InteractionController {
         account.withdraw(amount);
         persistenceManager.persist(account.getLastTransaction());
         persistenceManager.commit();
+
+        return account.getLastTransaction();
+    }
+
+    public Transaction transfer(Account fromAccount, Account toAccount, double amount) throws InsufficientFundsException,
+            CustomerNotOwnerException,
+            InvalidAmountException{
+
+        persistenceManager.start();
+        fromAccount.transfer(toAccount, amount);
+        persistenceManager.persist(fromAccount.getLastTransaction());
+        persistenceManager.persist(toAccount.getLastTransaction());
+        persistenceManager.commit();
+
+        return fromAccount.getLastTransaction();
+
     }
 
     public void addException(Object value) {

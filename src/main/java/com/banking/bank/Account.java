@@ -5,6 +5,8 @@ import com.banking.bank.exception.InsufficientFundsException;
 import com.banking.bank.exception.InvalidAmountException;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;

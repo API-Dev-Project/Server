@@ -2,8 +2,12 @@ package com.banking.bank;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
+@Inheritance
+@XmlRootElement
 @DiscriminatorValue(value = "Credit")
 public class Lodgement extends Transaction {
     public Lodgement() {
