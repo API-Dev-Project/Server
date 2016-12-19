@@ -2,11 +2,15 @@ package com.banking.bank;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by Graham Murray on 09/11/16.
  */
 @Entity
+@Inheritance
+@XmlRootElement
 @DiscriminatorValue(value = "Debit")
 public class Withdrawal extends Transaction {
 
