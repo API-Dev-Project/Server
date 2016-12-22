@@ -3,6 +3,7 @@ package com.banking.api;
 import com.banking.bank.Account;
 import com.banking.bank.Customer;
 import com.banking.bank.Transaction;
+import com.banking.bank.Withdrawal;
 import com.banking.bank.exception.CustomerNotOwnerException;
 import com.banking.bank.exception.InsufficientFundsException;
 import com.banking.bank.exception.InvalidAmountException;
@@ -49,7 +50,7 @@ public class AccountAPI {
             }
         }
 
-        return null;
+        return new Account();
     }
 
     @POST

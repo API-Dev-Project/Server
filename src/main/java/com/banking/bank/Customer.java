@@ -29,7 +29,6 @@ public class Customer extends Person implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy="owner")
     protected List<Account> accounts;
     protected String username;
-    @Transient
     protected String password;
 
     public Customer() {
@@ -120,4 +119,8 @@ public class Customer extends Person implements Serializable {
         return null;
     }
 
+    public boolean isValid() {
+        return !firstname.isEmpty() && !surname.isEmpty() && !username.isEmpty()
+                && !password.isEmpty() && !email.isEmpty() && !address.isEmpty();
+    }
 }

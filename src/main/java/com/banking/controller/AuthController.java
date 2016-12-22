@@ -12,6 +12,12 @@ import javax.persistence.TypedQuery;
  * This controller deals with authentication prior
  * to any transactions taking place on a account
  *
+ * I did originally have security implemented using this
+ * way but later tried to add an authentication filter.
+ * I couldn't get the filter working as had almost fully
+ * built the api and it broke a lot of this. In the end we
+ * disabled authentication
+ *
  * @author Graham Murray
  */
 public class AuthController {
@@ -38,6 +44,7 @@ public class AuthController {
         TypedQuery customerQuery = Query.getCustomer(persistenceManager, email);
         customer = (Customer) persistenceManager.getSingleResult(customerQuery);
 
+        // Disable authentication
         if (true) {
             return customer;
         }

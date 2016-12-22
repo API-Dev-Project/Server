@@ -7,6 +7,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import java.util.HashMap;
+import java.util.Map;
 
 @Path("/customer")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -24,7 +26,7 @@ public class CustomerAPI {
         Customer customer = interactionController.getCustomerById(id);
 
         if(customer == null) {
-            return null;
+            return new Customer();
         }
 
         return customer;
@@ -33,11 +35,11 @@ public class CustomerAPI {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Customer createCustomer(Customer customer) {
-        if(customer != null) {
+        if(customer != null && customer.isValid()) {
             return interactionController.addNewCustomer(customer);
         }
 
-        return interactionController.addNewCustomer(customer);
+        return new Customer();
     }
 
     @PUT
@@ -49,7 +51,6 @@ public class CustomerAPI {
             return interactionController.updateCustomer(customer);
         }
 
-        return null;
+        return new Customer();
     }
-
 }
